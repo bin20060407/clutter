@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * php extends singleton
+ * 
+ * @author Binbin Ma
+ * @version 20150807
+ * 
+ */
 class Cache {
     
     private static $_instance;
