@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" href="https://lib.sinaapp.com/js/bootstrap/4.1.3/css/bootstrap.min.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css"
+        />
+        <title>Json to Markdown Demo</title>
+        <style>
+            html,
+            body,
+            #editor,
+            .markdown {
+                margin: 0;
+                height: 100%;
+                font-family: 'Helvetica Neue', Arial, sans-serif;
+                color: #333;
+            }
+            .markdown textarea,
+            div.show {
+                width: 100%;
+                height: 100%;
+                vertical-align: top;
+                box-sizing: border-box;
+                padding: 0px;
+            }
+            textarea {
+                border: none;
+                border-right: 1px solid #ccc;
+                resize: none;
+                outline: none;
+                background-color: #f6f6f6;
+                font-size: 14px;
+                font-family: 'Monaco', courier, monospace;
+                padding: 20px;
+            }
+            .markdown-format {
+                border: 1px solid rgb(24, 23, 23);
+                background-color: #e0e0e0;
+            }
+        </style>
+    </head>
+    <body>
+        <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
+        <script src="https://unpkg.com/marked@0.3.6"></script>
+        <script src="https://unpkg.com/lodash@4.16.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/json2md@1.6.3/dist/json2md.min.js"></script>
+        <div class="container-fluid" id="editor">
+            <div class="row markdown">
+                <div class="col">
+                    <h5>Input JSON :</h5>
+                    <textarea class="input" :value="jsonInput" @input="updateJson"></textarea>
+                </div>
+                <div class="col">
+                    <h5>Markdown Show :</h5>
+                    <div class="show markdown-body" v-html="compiledMarkdown"></div>
+                </div>
+                <div class="col">
+                    <h5>Markdown Format :</h5>
+                    <textarea class="markdown-format" readonly :value="markdownFormat"></textarea>
+                </div>
+            </div>
+        </div>
+        <textarea id="defaultJson" style="display:none;">
+[
+  {
+    "h1": "JSON To Markdown"
+  },
+  {
+    "blockquote": "A JSON to Markdown converter."
+  },
+  {
+    "img": [
+      {
+        "title": "Some image",
+        "source": "https://wx4.sinaimg.cn/small/c0184b30gy1fv2gb58pjmj20oo0dwnko.jpg"
+      },
+      {
+        "title": "Another image",
+        "source": "https://wx3.sinaimg.cn/small/0076BSS5ly1g1017sckgyj30rs15rqaf.jpg"
+      },
+      {
+        "title": "Yet another image",
+        "source": "https://wx4.sinaimg.cn/small/83efbce0ly1g0zy7qccpjj20dw0993zk.jpg"
+      }
+    ]
+  },
+  {
+    "h2": "Features"
+  },
+  {
+    "ul": [
+      "Easy to use",
+      "You can programatically generate Markdown content",
+      "..."
+    ]
+  },
+  {
+    "h2": "How to contribute"
+  },
+  {
+    "ol": [
+      "Fork the project",
+      "Create your branch",
+      "Raise a pull request"
+    ]
+  },
+  {
+    "h2": "Code blocks"
+  },
+  {
+    "p": "Below you can see a code block example."
+  },
+  {
+    "code": {
+      "language": "js",
+      "content": [
+        "function sum (a, b) {",
+        "   return a + b",
+        "}",
+        "sum(1, 2)"
+      ]
+    }
+  }
+]
+        </textarea>
+        <script>
+            new Vue({
+                el: '#editor',
+                data: {
+                    markdownFormat: '',
+                    jsonInput: ''
+                },
+                computed: {
+                    compiledMarkdown: function() {
+                        var jsonObj = this.parseJson(this.jsonInput);
+                        if (jsonObj === false) {
+                            this.markdownFormat = '';
+                            return '';
+                        }
+                        var markdownStr = json2md(jsonObj);
+                        this.markdownFormat = markdownStr;
+                        return marked(markdownStr, { sanitize: true });
+                    }
+                },
+                created: function() {
+                    this.jsonInput = document.getElementById('defaultJson').value;
+                },
+                methods: {
+                    updateJson: _.debounce(function(e) {
+                        this.jsonInput = e.target.value;
+                    }, 300),
+                    parseJson: function(str) {
+                        try {
+                            return JSON.parse(str);
+                        } catch (error) {
+                            return false;
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
