@@ -16,6 +16,7 @@
             #editor,
             .markdown {
                 margin: 0;
+                padding: 0;
                 height: 100%;
                 font-family: 'Helvetica Neue', Arial, sans-serif;
                 color: #333;
@@ -28,6 +29,7 @@
                 box-sizing: border-box;
                 padding: 0px;
             }
+            .markdown .col { padding: 0 5px 0 5px;}
             textarea {
                 border: none;
                 border-right: 1px solid #ccc;
@@ -38,6 +40,12 @@
                 font-family: 'Monaco', courier, monospace;
                 padding: 20px;
             }
+
+            @media print {
+                #input {
+                    display: none;
+                }
+            }
         </style>
     </head>
     <body>
@@ -46,7 +54,7 @@
         <script src="https://unpkg.com/lodash@4.16.0"></script>
         <div class="container-fluid" id="editor">
             <div class="row markdown">
-                <div class="col">
+                <div class="col" id="input">
                     <textarea :value="markdownFormat" @input="update"></textarea>
                 </div>
                 <div class="col">
@@ -56,6 +64,11 @@
             </div>
         </div>
         <textarea id="defaultInput" style="display:none;">
+## 使用说明
+如果需生成 PDF ，在右边区域点击鼠标右键 `打印` 或者按快捷键 `Ctrl + P`，打印预览页面中`目标打印机`选择 `另存为PDF` 保存即可
+
+![另存为PDF](http://ww1.sinaimg.cn/mw690/69c0dffbgy1g198ydj6xqj20wz0ip40q.jpg "生成PDF")
+
 > 默认示例复制自：https://github.com/guodongxiaren/README
 
 README
